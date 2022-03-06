@@ -1,0 +1,79 @@
+int runMaze(Maze& theMaze, int path[], int startCell, int endCell) {
+
+
+	int step = 1;
+	int totalNumOfCells = theMaze.numCols() * theMaze.numRows();
+
+	bool up = theMaze.canGo(endCell, endCell - theMaze.numCols()) && !theMaze.isMarked(endCell - theMaze.numCols());
+	bool right = theMaze.canGo(endCell, endCell + 1) && !theMaze.isMarked(endCell + 1);
+	bool down = theMaze.canGo(endCell, endCell + theMaze.numCols()) && !theMaze.isMarked(endCell + theMaze.numCols());
+	bool left = theMaze.canGo(endCell, endCell - 1) && !theMaze.isMarked(endCell - 1);
+
+	int gOup = (endCell - theMaze.numCols());
+	int gOright = endCell + 1;
+	int gOdown = endCell + theMaze.numCols();
+	int gOleft = endCell - 1;
+
+
+	if (endCell == startCell) {
+		path[step - 1] = endCell;
+		return step;
+	}
+
+	else {
+
+		theMaze.mark(endCell);
+		int totalCells = 0;
+
+		if (endCell >= theMaze.numCols() && gOup <= totalNumOfCells && up) {  
+			
+			    totalCells = runMaze(theMaze, path, startCell, endCell - theMaze.numCols());
+				if (totalCells ) { 
+					step += totalCells;    
+					path[step - 1] = endCell; 
+					return  step;
+				}
+			
+		}
+
+		if (endCell + 1>= 0 && right && gOright <= totalNumOfCells) {
+
+			totalCells = runMaze(theMaze, path, startCell, endCell + 1);
+			if (totalCells) {
+				step += totalCells;
+				path[step - 1] = endCell;
+
+				return step;
+			}
+
+		}
+
+		if (endCell + theMaze.numCols() >= 0 && gOdown <= totalNumOfCells && down) {
+			
+				 totalCells = runMaze(theMaze, path, startCell, endCell + theMaze.numCols());
+				if (totalCells ) {
+					
+					step += totalCells;
+					path[step - 1] = endCell;
+
+					return step;
+				}
+			
+		}
+	
+		if (endCell - 1 >= 0 &&  left && gOleft <= totalNumOfCells) {		
+
+				 totalCells = runMaze(theMaze, path, startCell, endCell - 1);
+				if (totalCells) {
+					step += totalCells;
+					path[step - 1] = endCell;
+					return step;
+				}		
+		}
+
+	}
+	
+	theMaze.unMark(endCell);
+
+	return 0;
+}
